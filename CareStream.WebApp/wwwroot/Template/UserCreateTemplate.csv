@@ -1,0 +1,2 @@
+DisplayName,UserPrincipalName,InitialPassword,BlockSignIn,FirstName,LastName,JobTitle,Department,Usagelocation,StreetAddress,State,Country,Office,City,ZIP,OfficePhone,MobilePhone
+Example: Chris Green, chris@contoso.com, myPassword1234, No,,,,,,,,,,,,,

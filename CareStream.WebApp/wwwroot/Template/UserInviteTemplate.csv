@@ -1,0 +1,2 @@
+InviteeEmail,InviteRedirectURL,SendEmail,CustomizedMessageBody
+Example: Istokes@fabrikam.com, https://myapps.azure.com, TRUE, Welcome to the Contoso organization!

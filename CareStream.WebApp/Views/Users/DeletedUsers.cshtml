@@ -1,0 +1,61 @@
+﻿@model CareStream.Models.UsersModel
+
+@{
+    ViewData["Title"] = "DeletedUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    $(document).ready(function () { unBlockUi(); });
+</script>
+
+<h1>DeletedUsers</h1>
+
+<div class="container-fluid">
+    <table class="table table-striped border">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selectedID1" /> </th>
+                <th></th>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>Department</th>
+                <th>Regions</th>
+                <th>User Type</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @*<input type="checkbox" name="chkboxUser-@item.Id" id="chkboxUser-@item.Id" data-userid="@item.Id" />*@
+                        <input type="checkbox" name="selectedList" id="selectedUser" value="@item.Id" />
+                    </td>
+                    <td>
+                        <i class="fa fa-user rounded-circle" style="padding:10px;border:2px solid #ccc;"></i>
+                    </td>
+                    <td>
+                        <a asp-controller="Accounts" asp-action="Index" asp-route-id="@item.Id" class="text-dark">@Html.DisplayFor(modelItem => item.GivenName)  @Html.DisplayFor(modelItem => item.Surname)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserPrincipalName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Region)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Source)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

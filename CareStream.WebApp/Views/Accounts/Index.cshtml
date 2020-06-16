@@ -1,0 +1,65 @@
+﻿@model Microsoft.Graph.User;
+
+@{
+    ViewData["Title"] = "AccountInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () { unBlockUi(); });
+</script>
+
+    <div id="page-content-wrapper">
+        <div class="container-fluid no-gutter border-bottom">
+            <div class="row mb-3">
+                <div class="font-weight-bold mt-2 mb-2">Overview</div>
+                <div class="col-1">
+                    <img class="rounded-circle img-fluid" alt="100x100" src="@Model.Photo">
+                </div>
+                <div class="col-4">
+                    <div class="col-12"><span>Name:</span><span class="font-weight-bold"> @Model.DisplayName </span></div>
+                    <div class="col-12"><span>Account:</span><span class="font-weight-bold"> @Model.Mail </span></div>
+                    <div class="col-12"><span>Your Roles:</span><span class="font-weight-bold"> @Model.JobTitle </span></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="font-weight-bold mt-2 mb-2 ml-3">Quick Links</div>
+
+        <div class="card col-3 ml-3 d-inline-flex">
+            <div class="card-body">
+                <div class="font-weight-bold mb-3"> <i class="fa fa-user" aria-hidden="true"></i>  Users </div>
+
+                <p class="card-text">
+
+                    <ul class="list-unstyled ml-3">
+                        <li><a class="text-decoration-none text-dark" asp-area="" asp-controller="Users" asp-action="Index">View All Users</a></li>
+                        <li><a class="text-decoration-none text-dark" asp-area="" asp-controller="Users" asp-action="Create">Create a User </a></li>
+                        <li><a class="text-decoration-none text-dark" asp-controller="Users" asp-action="Invite"> Invite a User </a></li>
+                        <li><a class="text-decoration-none text-dark" asp-controller="Users" asp-action="Create"> Deleted Users </a></li>
+                    </ul>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="card col-3 ml-3 d-inline-flex">
+            <div class="card-body">
+                <div class="font-weight-bold mb-3"> <i class="fa fa-users" aria-hidden="true"></i>  Groups </div>
+
+                <p class="card-text">
+
+                    <ul class="list-unstyled ml-3">
+                        <li><a class="text-decoration-none text-dark" asp-controller="Group" asp-action="Index">View All Groups</a></li>
+                        <li><a class="text-decoration-none text-dark" href="#">Deleted a Group  </a></li>
+                        <li><a href="" class="text-decoration-none text-dark"> View Members of a Group </a></li>
+                        <li><a href="" class="text-decoration-none text-dark"> Add Members to a Group  </a></li>
+                    </ul>
+
+
+                </p>
+            </div>
+        </div>
+
+    </div>
+

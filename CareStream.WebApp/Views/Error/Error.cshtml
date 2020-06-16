@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_Layout_login.cshtml";
+}
+
+<h1>Error</h1>
+
+<h3>An Error occured while processing the request.
+    The support team is Notified and we are working on the fix. </h3>
+
+<h5>Please contact us on xxx@xxx.xxx</h5>
+
+<hr/>
+<h3>Exception Details</h3>
+<div class="alert alert-danger">
+    <h5>Exception path:</h5>
+    <p>@ViewBag.exceptionPath</p>
+    <hr />
+</div>
+
+<div class="alert alert-danger">
+    <h5>Exception Message:</h5>
+    <p>@ViewBag.exceptionMessage</p>
+    <hr />
+</div>
+
+<div class="alert alert-danger">
+    <h5>Exception Source:</h5>
+    <p>@ViewBag.exceptionSource</p>
+    <hr />
+</div>

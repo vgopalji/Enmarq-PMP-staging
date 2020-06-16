@@ -1,0 +1,16 @@
+﻿@{
+    string CurrentName = this.ViewContext.RouteData.Values["controller"].ToString();
+    dynamic Layout;
+    switch (CurrentName)
+    {
+        case "Home":
+            Layout = "~/Views/Shared/_Layout_login.cshtml";
+            break;
+        case "Account":
+            Layout = "~/Views/Shared/_Layout_login.cshtml";
+            break;
+        default:
+            Layout = "~/Views/Shared/_Layout.cshtml";
+            break;
+    }
+}

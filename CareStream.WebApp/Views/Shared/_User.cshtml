@@ -1,0 +1,29 @@
+﻿@model CareStream.Models.UserModel
+
+    <div class="userDetail">
+        <table>
+            <tr >
+                <td>
+                    @*<input type="checkbox"
+                name="chkboxOwner-@Model.Id" id="chkboxOwner-@Model.Id" data-Ownerid="@Model.Id" />*@
+                    <input type="checkbox" name="selectedUser" id="selectedUser" value="@Model.Id" />
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelModel => Model.GivenName)  @Html.DisplayFor(modelModel => Model.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelModel => Model.UserPrincipalName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelModel => Model.Department)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelModel => Model.Region)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelModel => Model.UserType)
+                </td>
+            </tr>
+        </table>
+    </div>

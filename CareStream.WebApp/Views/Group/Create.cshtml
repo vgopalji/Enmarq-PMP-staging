@@ -1,0 +1,285 @@
+﻿@model CareStream.Models.GroupModel
+
+@{
+    ViewData["Title"] = "CreateGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="creategroup">
+
+    <div class="container no-gutter border-bottom mb-4">
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-light pt-0 pb-0">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="nav-tabs navbar-nav">
+                        <li class="nav-item active col-12 mt-2 mb-2">
+                            <span class="font-weight-bold"> Create a New Group </span>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row ">
+            <form method="post" action="/Group/Post">
+
+                <div class="form-group row mb-3">
+                    <label for="staticname" class="col-sm-2 col-form-label">
+                        Group Name
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="groupName" placeholder="Enter Group Name" asp-for="@Model.DisplayName" required>
+                        <span asp-validation-for="@Model.DisplayName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label for="staticgrouptype" class="col-sm-2 col-form-label">
+                        Group Type
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(x => x.GroupType, (SelectList)ViewData["GroupType"],
+                                               new { style = "-webkit-appearance: menulist !important;", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label for="inputDescription" class="col-sm-2 col-form-label">Description </label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="Description" rows="3" placeholder="Enter Description" asp-for="@Model.Description"></textarea>
+                        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label for="inputDescription" class="col-sm-2 col-form-label">Owners </label>
+                    <div class="col-sm-6">
+                        <a href="#" class="navbar" data-target="#bs-canvas-right" data-toggle="canvas"
+                           aria-expanded="false" aria-controls="bs-canvas-right"
+                           id="ownerGroup">
+                            <label id="ownerLab"> No Owners Selected</label>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <label for="inputDescription" class="col-sm-2 col-form-label">Members </label>
+                    <div class="col-sm-6">
+                        <a href="#" class="navbar" data-target="#bs-canvas-left" data-toggle="canvas"
+                           aria-expanded="false" aria-controls="bs-canvas-right"
+                           id="memberGroup">
+                            <label id="memberLab"> No Members Selected </label>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <div class="form-group row mb-3">
+                        <div class="col-sm-8 text-right">
+                            <input type="submit" class="btn btn-primary text-white" value="Create" onclick="blockUi();" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div id="groupOwnerDiv">
+    <div id="bs-canvas-right" class="bs-canvas bs-canvas-anim bs-canvas-right position-fixed h-100" style="padding-bottom:10px;">
+        <partial name="_UserGroup" model="@Model.GroupOwnerAssign" />
+        <a id="selectedGroupOwner" style="cursor:pointer" class="bs-canvas-close btn btn-primary text-white ml-4" aria-label="Close">Select</a>
+        <a id="selectedGroupOwnerClose" style="cursor:pointer" class="bs-canvas-close btn btn-primary text-white ml-4" aria-label="Close">Close</a>
+    </div>
+</div>
+
+<div id="groupMemberDiv">
+    <div id="bs-canvas-left" class="bs-canvas bs-canvas-anim bs-canvas-right position-fixed h-100" style="padding-bottom:10px;">
+        <partial name="_UserGroup" model="@Model.GroupMemberAssign" />
+        <a id="selectedGroupMember" style="cursor:pointer" class="bs-canvas-close btn btn-primary text-white ml-4" aria-label="Close">Select</a>
+        <a id="selectedGroupMemberClose" style="cursor:pointer" class="bs-canvas-close btn btn-primary text-white ml-4" aria-label="Close">Close</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#selectedGroupOwner').on('click', function () {
+                var selectedMemberIds = [];
+                $("input[type='checkbox'][id^='chkbox_Owner']:checked").each(function () { selectedMemberIds.push($(this).data("memberid")); })
+
+                if (selectedMemberIds.length == 0) {
+                    $('#ownerLab').html('<span style="text-transform:capitalize;">' +  'No Owners Selected </span>');
+                }
+                else if (selectedMemberIds.length > 0) {
+                    var selOwner = ' Owners Selected';
+                    if (selectedMemberIds.length == 1) {
+                        selOwner = ' Owner Selected'
+                    }
+                    $('#ownerLab').html('<span style="text-transform:capitalize;">' + selectedMemberIds.length + selOwner + '</span>');
+                }
+
+                var groupId = "Owner"
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AddSelectedOwnerOrMember", "Group")',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    data: JSON.stringify({
+                        GroupId: groupId,
+                        SelectedMembers: selectedMemberIds
+                    }),
+                    success: function (response) {
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                })
+            })
+
+            $('#selectedGroupMember').on('click', function () {
+                var selectedMemberIds = [];
+                $("input[type='checkbox'][id^='chkbox_Member']:checked").each(function () { selectedMemberIds.push($(this).data("memberid")); })
+
+
+                if (selectedMemberIds.length == 0) {
+                    $('#memberLab').html('<span style="text-transform:capitalize;">' + 'No Members Selected </span>');
+                }
+                else if (selectedMemberIds.length > 0) {
+                    var selOwner = ' Members Selected';
+                    if (selectedMemberIds.length == 1) {
+                        selOwner = ' Member Selected'
+                    }
+                    $('#memberLab').html('<span style="text-transform:capitalize;">' + selectedMemberIds.length + selOwner + '</span>');
+                }
+
+                var groupId = "Member"
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AddSelectedOwnerOrMember", "Group")',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    data: JSON.stringify({
+                        GroupId: groupId,
+                        SelectedMembers: selectedMemberIds
+                    }),
+                    success: function (response) {
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                })
+            })
+
+            $("#ownerGroup").click(function (e) {
+                e.preventDefault();
+                $('#groupOwnerDiv').show();
+                $('#groupMemberDiv').hide();
+
+            });
+
+            $("#memberGroup").click(function (e) {
+                e.preventDefault();
+                $('#groupMemberDiv').show();
+                $('#groupOwnerDiv').hide();
+            });
+
+            $('#OffsetWizDiv').DataTable({
+                'columnDefs': [{
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': false,
+                    'className': 'dt-body-center'
+
+                }],
+                select: {
+                    style: 'os',
+                    selector: 'td:first-child'
+                },
+                order: [[1, 'asc']],
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "Search Users",
+                },
+                "bLengthChange": false,
+                "bPaginate": false,
+                "bInfo": false,
+                "fixedHeader": {
+                    "footer": false
+                },
+            });
+
+            var bsDefaults = {
+                offset: false,
+                overlay: true,
+                width: '450px'
+            },
+                bsMain = $('.bs-offset-main'),
+                bsOverlay = $('.bs-canvas-overlay');
+
+            $('[data-toggle="canvas"][aria-expanded="false"]').on('click', function () {
+                var canvas = $(this).data('target'),
+                    opts = $.extend({}, bsDefaults, $(canvas).data()),
+                    prop = $(canvas).hasClass('bs-canvas-right') ? 'margin-right' : 'margin-left';
+
+                if (opts.width === '100%')
+                    opts.offset = false;
+
+                $(canvas).css('width', opts.width);
+                if (opts.offset && bsMain.length)
+                    bsMain.css(prop, opts.width);
+
+                $(canvas + ' .bs-canvas-close').attr('aria-expanded', "true");
+                $('[data-toggle="canvas"][data-target="' + canvas + '"]').attr('aria-expanded', "true");
+                if (opts.overlay && bsOverlay.length)
+                    bsOverlay.addClass('show');
+                return false;
+            });
+
+            $('.bs-canvas-close, .bs-canvas-overlay').on('click', function () {
+                var canvas, aria;
+                if ($(this).hasClass('bs-canvas-close')) {
+                    canvas = $(this).closest('.bs-canvas');
+                    aria = $(this).add($('[data-toggle="canvas"][data-target="#' + canvas.attr('id') + '"]'));
+                    if (bsMain.length)
+                        bsMain.css(($(canvas).hasClass('bs-canvas-right') ? 'margin-right' : 'margin-left'), '');
+                } else {
+                    canvas = $('.bs-canvas');
+                    aria = $('.bs-canvas-close, [data-toggle="canvas"]');
+                    if (bsMain.length)
+                        bsMain.css({
+                            'margin-left': '',
+                            'margin-right': ''
+                        });
+                }
+                canvas.css('width', '');
+                aria.attr('aria-expanded', "false");
+                if (bsOverlay.length)
+                    bsOverlay.removeClass('show');
+                return false;
+            });
+
+            unBlockUi();
+        });
+
+    </script>
+}
