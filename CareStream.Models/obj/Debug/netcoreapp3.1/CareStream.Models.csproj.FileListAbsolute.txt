@@ -1,0 +1,9 @@
+D:\Enmarq-PMP-Develop-master\CareStream.Models\bin\Debug\netcoreapp3.1\CareStream.Models.deps.json
+D:\Enmarq-PMP-Develop-master\CareStream.Models\bin\Debug\netcoreapp3.1\CareStream.Models.dll
+D:\Enmarq-PMP-Develop-master\CareStream.Models\bin\Debug\netcoreapp3.1\CareStream.Models.pdb
+D:\Enmarq-PMP-Develop-master\CareStream.Models\obj\Debug\netcoreapp3.1\CareStream.Models.csprojAssemblyReference.cache
+D:\Enmarq-PMP-Develop-master\CareStream.Models\obj\Debug\netcoreapp3.1\CareStream.Models.AssemblyInfoInputs.cache
+D:\Enmarq-PMP-Develop-master\CareStream.Models\obj\Debug\netcoreapp3.1\CareStream.Models.AssemblyInfo.cs
+D:\Enmarq-PMP-Develop-master\CareStream.Models\obj\Debug\netcoreapp3.1\CareStream.Models.csproj.CoreCompileInputs.cache
+D:\Enmarq-PMP-Develop-master\CareStream.Models\obj\Debug\netcoreapp3.1\CareStream.Models.dll
+D:\Enmarq-PMP-Develop-master\CareStream.Models\obj\Debug\netcoreapp3.1\CareStream.Models.pdb

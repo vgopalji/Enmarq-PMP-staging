@@ -1,0 +1,9 @@
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\bin\Debug\netcoreapp3.1\CareStream.LoggerService.deps.json
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\bin\Debug\netcoreapp3.1\CareStream.LoggerService.dll
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\bin\Debug\netcoreapp3.1\CareStream.LoggerService.pdb
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\obj\Debug\netcoreapp3.1\CareStream.LoggerService.csprojAssemblyReference.cache
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\obj\Debug\netcoreapp3.1\CareStream.LoggerService.AssemblyInfoInputs.cache
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\obj\Debug\netcoreapp3.1\CareStream.LoggerService.AssemblyInfo.cs
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\obj\Debug\netcoreapp3.1\CareStream.LoggerService.csproj.CoreCompileInputs.cache
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\obj\Debug\netcoreapp3.1\CareStream.LoggerService.dll
+D:\Enmarq-PMP-Develop-master\CareStream.LoggerService\obj\Debug\netcoreapp3.1\CareStream.LoggerService.pdb
