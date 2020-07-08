@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -287,8 +288,26 @@ namespace CareStream.WebApp.Controllers
         //Upload document
         [HttpPost]
         [ActionName("FileUpload")]
-        public async Task<IActionResult> Upload(IFormFile formFile)
+        public async Task<IActionResult> Upload(List<IFormFile> files)
         {
+            //long size = files.Sum(f => f.Length);
+
+            //var filePaths = new List<string>();
+            //foreach (var formFile in files)
+            //{
+            //    if (formFile.Length > 0)
+            //    {
+            //        // full path to file in temp location
+            //        var filePath = Path.GetTempFileName(); //we are using Temp file name just for the example. Add your own file path.
+            //        filePaths.Add(filePath);
+
+            //        using (var stream = new FileStream(filePath, FileMode.Create))
+            //        {
+            //            await formFile.CopyToAsync(stream);
+            //        }
+            //    }
+            //}
+            //return Ok(new { count = files.Count, size, filePaths });
             try
             {
                 BulkUserFile bulkUserFile = null;
@@ -297,8 +316,8 @@ namespace CareStream.WebApp.Controllers
                 ClaimsPrincipal currentUser = this.User;
                 //var actionFor = string.IsNullOrEmpty(id) ? CareStreamConst.Bulk_User_Create : id;
 
-                //foreach (var formFile in files)
-                //{
+                foreach (var formFile in files)
+                {
                     try
                     {
                         if (formFile.Length > 0)
@@ -311,11 +330,12 @@ namespace CareStream.WebApp.Controllers
                             {
                                 await formFile.CopyToAsync(stream);
                             }
-
+                            var csvTable = new DataTable();
                             TextReader reader = new StreamReader(filePath);
                             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
                             csv.Read();
                             csv.ReadHeader();
+                            var recs=csv.GetRecords<BulkUser>();
 
                             bulkUserFile.Action = "";
                             bulkUserFile.CreatedDate = DateTime.Now;
@@ -324,7 +344,7 @@ namespace CareStream.WebApp.Controllers
                             bulkUserFile.Status = CareStreamConst.Bulk_User_Loaded_Status;
                             bulkUserFile.UploadBy = string.IsNullOrEmpty(currentUser.Identity.Name) ? CareStreamConst.Bulk_User_UploadedBy : currentUser.Identity.Name;
 
-                            //bulkUsers = ProcessCSVAndCreateDbObject(csv, actionFor);
+                            bulkUsers = ProcessCSVAndCreateDbObject(csv);
                         }
                     }
                     catch (Exception ex)
@@ -333,58 +353,58 @@ namespace CareStream.WebApp.Controllers
                         _logger.LogError(ex);
                     }
 
-                //}
+                }
 
-                //if (bulkUserFile != null)
-                //{
-                //    if (IsBulkUserFileValid(bulkUserFile))
-                //    {
-                //        try
-                //        {
-                //            _cc.Add(bulkUserFile);
-                //            var result = _cc.SaveChanges();
+                //    //if (bulkUserFile != null)
+                //    //{
+                //    //    if (IsBulkUserFileValid(bulkUserFile))
+                //    //    {
+                //    //        try
+                //    //        {
+                //    //            _cc.Add(bulkUserFile);
+                //    //            var result = _cc.SaveChanges();
 
-                //            if (result > 0)
-                //            {
-                //                var fileId = bulkUserFile.Id;
-                //                if (bulkUsers != null)
-                //                {
-                //                    if (bulkUsers.Any())
-                //                    {
-                //                        foreach (var bulkUser in bulkUsers)
-                //                        {
-                //                            try
-                //                            {
-                //                                bulkUser.FileId = fileId;
-                //                                if (IsBulkUserValid(bulkUser, actionFor))
-                //                                {
-                //                                    _cc.Add(bulkUser);
-                //                                    var bulkUserResult = _cc.SaveChanges();
+                //    //            if (result > 0)
+                //    //            {
+                //    //                var fileId = bulkUserFile.Id;
+                //    //                if (bulkUsers != null)
+                //    //                {
+                //    //                    if (bulkUsers.Any())
+                //    //                    {
+                //    //                        foreach (var bulkUser in bulkUsers)
+                //    //                        {
+                //    //                            try
+                //    //                            {
+                //    //                                bulkUser.FileId = fileId;
+                //    //                                if (IsBulkUserValid(bulkUser, actionFor))
+                //    //                                {
+                //    //                                    _cc.Add(bulkUser);
+                //    //                                    var bulkUserResult = _cc.SaveChanges();
 
-                //                                    if (bulkUserResult == 0)
-                //                                    {
-                //                                        _logger.LogWarn($"BulkUploadController-Index: Unable to save bulk user for action {bulkUser.Action} and file id {fileId}");
-                //                                    }
-                //                                }
-                //                            }
-                //                            catch (Exception ex)
-                //                            {
-                //                                _logger.LogError($"BulkUploadController-Index: Error saving the user detail for action {bulkUser.Action}");
-                //                                _logger.LogError(ex);
-                //                            }
-                //                        }
+                //    //                                    if (bulkUserResult == 0)
+                //    //                                    {
+                //    //                                        _logger.LogWarn($"BulkUploadController-Index: Unable to save bulk user for action {bulkUser.Action} and file id {fileId}");
+                //    //                                    }
+                //    //                                }
+                //    //                            }
+                //    //                            catch (Exception ex)
+                //    //                            {
+                //    //                                _logger.LogError($"BulkUploadController-Index: Error saving the user detail for action {bulkUser.Action}");
+                //    //                                _logger.LogError(ex);
+                //    //                            }
+                //    //                        }
 
-                //                    }
-                //                }
-                //            }
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            _logger.LogError($"BulkUploadController-Index: Error saving the file name {bulkUserFile.FileName} ");
-                //            _logger.LogError(ex);
-                //        }
-                //    }
-                //}
+                //    //                    }
+                //    //                }
+                //    //            }
+                //    //        }
+                //    //        catch (Exception ex)
+                //    //        {
+                //    //            _logger.LogError($"BulkUploadController-Index: Error saving the file name {bulkUserFile.FileName} ");
+                //    //            _logger.LogError(ex);
+                //    //        }
+                //    //    }
+                //    //}
 
                 ShowSuccessMessage("Succssfully uploaded the file.");
             }
@@ -439,6 +459,124 @@ namespace CareStream.WebApp.Controllers
             }
 
             return retVal;
+        }
+
+        private List<BulkUser> ProcessCSVAndCreateDbObject(CsvReader csvReader)
+        {
+            List<BulkUser> bulkUsers = new List<BulkUser>();
+            try
+            {
+                if (csvReader != null)
+                {
+                   
+                            #region Create || Update User
+
+                            while (csvReader.Read())
+                            {
+                                BulkUser bulkUser = new BulkUser
+                                {
+                                    Action = "",
+                                    Status = CareStreamConst.Bulk_User_Loaded_Status,
+                                    CreatedDate = DateTime.UtcNow,
+                                    ModifiedDate = DateTime.UtcNow
+                                };
+
+                                foreach (string header in csvReader.Context.HeaderRecord)
+                                {
+                                    try
+                                    {
+                                        switch (header.ToLower())
+                                        {
+                                            case CareStreamConst.BU_DisplayName:
+                                                bulkUser.DisplayName = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_UserPrincipalName:
+                                                bulkUser.UserPrincipalName = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_InitialPassword:
+                                                bulkUser.InitialPassword = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_BlockSignIn:
+                                                var blockSignStr = csvReader.GetField(header);
+                                                if (string.IsNullOrEmpty(blockSignStr))
+                                                {
+                                                    bulkUser.BlockSignIn = false;
+                                                }
+                                                else if (blockSignStr.ToLower() == "yes")
+                                                {
+                                                    bulkUser.BlockSignIn = true;
+                                                }
+                                                else
+                                                {
+                                                    bulkUser.BlockSignIn = false;
+                                                }
+                                                break;
+                                            case CareStreamConst.BU_FirstName:
+                                                bulkUser.FirstName = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_LastName:
+                                                bulkUser.LastName = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_JobTitle:
+                                                bulkUser.JobTitle = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_Department:
+                                                bulkUser.Department = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_Usagelocation:
+                                                bulkUser.Usagelocation = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_StreetAddress:
+                                                bulkUser.StreetAddress = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_State:
+                                                bulkUser.State = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_Country:
+                                                bulkUser.Country = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_Office:
+                                                bulkUser.Office = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_City:
+                                                bulkUser.City = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_ZIP:
+                                                bulkUser.ZIP = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_OfficePhone:
+                                                bulkUser.OfficePhone = csvReader.GetField(header);
+                                                break;
+                                            case CareStreamConst.BU_MobilePhone:
+                                                bulkUser.MobilePhone = csvReader.GetField(header);
+                                                break;
+                                        }
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.LogError($"BulkUploadController-ProcessCSVAndCreateDbObject: Create || Update user error reading values for header- {header}");
+                                        _logger.LogError(ex);
+                                    }
+
+                                
+
+                                bulkUsers.Add(bulkUser);
+                            }
+
+                            #endregion
+
+                            break;
+                     
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("BulkUploadController-ProcessCSVAndCreateDbObject: Exception occurred...");
+                _logger.LogError(ex);
+            }
+            return bulkUsers;
         }
     }
 
